@@ -2,7 +2,11 @@ import pymysql
 from os import getenv
 
 
-class courses:
+# user = "admin"
+# password = "12345678"
+# host = "course.ceqqavijgmdi.us-east-1.rds.amazonaws.com"
+
+class Courses:
 
     def __init__(self):
         pass
@@ -21,7 +25,7 @@ class courses:
     @staticmethod
     def get_by_key(key):
         sql = "SELECT * FROM courses.courses where call_number=%s";
-        conn = courses._get_connection()
+        conn = Courses._get_connection()
         cur = conn.cursor()
         cur.execute(sql, args=key)
         result = cur.fetchone()
@@ -30,11 +34,9 @@ class courses:
 
     @staticmethod
     def update_by_key(call_number, courses):
-        conn = courses._get_connection()
+        conn = Courses._get_connection()
         cur = conn.cursor()
         content = []
-        if "call_number" in courses:
-            content.append("call_number = \"" + courses["call_number"] + "\"")
         if "class_title" in courses:
             content.append("class_title = \"" + courses["class_title"] + "\"")
         if "instructor" in courses:
@@ -45,15 +47,16 @@ class courses:
             content.append("time_Location = \"" + courses["time_Location"] + "\"")
         #sql = "UPDATE f22_databases.columbia_students SET " + ", ".join(content) + " WHERE guid = \"" + uni + "\""
         #print(sql)
-        sql = "UPDATE courses.courses " + ", ".join(content) + " WHERE guid = %s"
-        res = cur.execute(sql, args=uni)
+        sql = "UPDATE courses.courses SET " + ", ".join(content) + " WHERE call_number = %s"
+        res = cur.execute(sql, args=call_number)
         result = cur.fetchone()
 
         return result
 
     @staticmethod
     def insert_by_key(courses):
-        conn = courses._get_connection()
+        conn = Courses._get_connection()
+        print("connect")
         cur = conn.cursor()
         if "call_number" not in courses:
             raise ValueError("call_number")
@@ -61,8 +64,8 @@ class courses:
         class_title = courses["class_title"] if "class_title" in courses else ""
         instructor = courses["instructor"] if "instructor" in courses else ""
         day = courses["day"] if "day" in courses else ""
-        time_location = courses["time_Location"] if "time_Location" in courses else ""
-        sql = "INSERT INTO course.courses (call_number, class_title, instructor, day, time_Location) " \
+        time_Location = courses["time_Location"] if "time_Location" in courses else ""
+        sql = "INSERT INTO courses.courses (call_number, class_title, instructor, day, time_Location) " \
               "VALUES (%s, %s, %s, %s, %s)"
         cur.execute(sql, args=(call_number, class_title, instructor, day, time_Location))
         result = cur.fetchone()
@@ -71,8 +74,8 @@ class courses:
 
     @staticmethod
     def delete_by_key(call_number):
-        conn = courses._get_connection()
+        conn = Courses._get_connection()
         cur = conn.cursor()
-        sql = "DELETE FROM course.courses WHERE call_number = %s"
-        cur.execute(sql, args=uni)
+        sql = "DELETE FROM courses.courses WHERE call_number = %s"
+        cur.execute(sql, args=call_number)
         return

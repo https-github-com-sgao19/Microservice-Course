@@ -1,7 +1,7 @@
 from flask import Flask, Response, request, make_response
 from datetime import datetime
 import json
-from course import courses
+from course import Courses
 from flask_cors import CORS
 
 # Create the Flask application object.
@@ -28,16 +28,17 @@ def test_flask():
 
 @app.put("/courses/<call_number>")
 def put_student(call_number):
-    params = request.args
-    courses.update_by_key(call_number, params)
+    body = request.form
+    Courses.update_by_key(call_number, body)
     return get_student_by_uni(call_number)
 
 
 @app.post("/courses")
 def post_student():
-    body = request.json
+    body = request.form
+    print(body)
     try:
-        courses.insert_by_key(body)
+        Courses.insert_by_key(body)
     except:
         return Response("Insert Failure", status=404, content_type="text/plain")
     return get_student_by_uni(body["call_number"])
@@ -46,7 +47,7 @@ def post_student():
 @app.delete("/courses/<call_number>")
 def delete_student(call_number):
     try:
-        courses.delete_by_key(call_number)
+        Courses.delete_by_key(call_number)
         response = make_response("Delete Success!", 200)
     except:
         response = make_response("Delete Fail!", 400)
@@ -60,7 +61,7 @@ def get_students_by_template():
 
 @app.route("/courses/<call_number>", methods=["GET"])
 def get_student_by_uni(call_number):
-    result = courses.get_by_key(call_number)
+    result = Courses.get_by_key(call_number)
 
     if result:
         rsp = Response(json.dumps(result), status=200, content_type="application.json")
