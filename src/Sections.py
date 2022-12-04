@@ -6,7 +6,7 @@ from os import getenv
 # password = "12345678"
 # host = "course.ceqqavijgmdi.us-east-1.rds.amazonaws.com"
 
-class Courses:
+class Sections:
 
     def __init__(self):
         pass
@@ -24,7 +24,17 @@ class Courses:
 
     @staticmethod
     def get_by_key(key):
-        sql = "SELECT * FROM courses.courses where call_number=%s";
+        sql = "SELECT * FROM courses.sections where call_number=%s"
+        conn = Courses._get_connection()
+        cur = conn.cursor()
+        cur.execute(sql, args=key)
+        result = cur.fetchone()
+
+        return result
+
+    @staticmethod
+    def get_by_query(query):
+        sql = query
         conn = Courses._get_connection()
         cur = conn.cursor()
         cur.execute(sql, args=key)
@@ -45,9 +55,9 @@ class Courses:
             content.append("day = \"" + courses["day"] + "\"")
         if "time_Location" in courses:
             content.append("time_Location = \"" + courses["time_Location"] + "\"")
-        #sql = "UPDATE f22_databases.columbia_students SET " + ", ".join(content) + " WHERE guid = \"" + uni + "\""
-        #print(sql)
-        sql = "UPDATE courses.courses SET " + ", ".join(content) + " WHERE call_number = %s"
+        # sql = "UPDATE f22_databases.columbia_students SET " + ", ".join(content) + " WHERE guid = \"" + uni + "\""
+        # print(sql)
+        sql = "UPDATE courses.sections SET " + ", ".join(content) + " WHERE call_number = %s"
         res = cur.execute(sql, args=call_number)
         result = cur.fetchone()
 
@@ -65,7 +75,7 @@ class Courses:
         instructor = courses["instructor"] if "instructor" in courses else ""
         day = courses["day"] if "day" in courses else ""
         time_Location = courses["time_Location"] if "time_Location" in courses else ""
-        sql = "INSERT INTO courses.courses (call_number, class_title, instructor, day, time_Location) " \
+        sql = "INSERT INTO courses.sections (call_number, class_title, instructor, day, time_Location) " \
               "VALUES (%s, %s, %s, %s, %s)"
         cur.execute(sql, args=(call_number, class_title, instructor, day, time_Location))
         result = cur.fetchone()
@@ -78,4 +88,6 @@ class Courses:
         cur = conn.cursor()
         sql = "DELETE FROM courses.courses WHERE call_number = %s"
         cur.execute(sql, args=call_number)
-        return
+        result = cur.fetchone()
+
+        return result
