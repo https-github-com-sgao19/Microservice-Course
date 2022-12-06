@@ -24,18 +24,8 @@ class Sections:
 
     @staticmethod
     def get_by_key(key):
-        sql = "SELECT * FROM courses.sections where call_number=%s"
-        conn = Courses._get_connection()
-        cur = conn.cursor()
-        cur.execute(sql, args=key)
-        result = cur.fetchone()
-
-        return result
-
-    @staticmethod
-    def get_by_query(query):
-        sql = query
-        conn = Courses._get_connection()
+        sql = "SELECT * FROM courses.student_sections where call_number=%s"
+        conn = Sections._get_connection()
         cur = conn.cursor()
         cur.execute(sql, args=key)
         result = cur.fetchone()
@@ -44,7 +34,7 @@ class Sections:
 
     @staticmethod
     def update_by_key(call_number, courses):
-        conn = Courses._get_connection()
+        conn = Sections._get_connection()
         cur = conn.cursor()
         content = []
         if "class_title" in courses:
@@ -57,7 +47,7 @@ class Sections:
             content.append("time_Location = \"" + courses["time_Location"] + "\"")
         # sql = "UPDATE f22_databases.columbia_students SET " + ", ".join(content) + " WHERE guid = \"" + uni + "\""
         # print(sql)
-        sql = "UPDATE courses.sections SET " + ", ".join(content) + " WHERE call_number = %s"
+        sql = "UPDATE courses.student_sections SET " + ", ".join(content) + " WHERE call_number = %s"
         res = cur.execute(sql, args=call_number)
         result = cur.fetchone()
 
@@ -65,7 +55,7 @@ class Sections:
 
     @staticmethod
     def insert_by_key(courses):
-        conn = Courses._get_connection()
+        conn = Sections._get_connection()
         print("connect")
         cur = conn.cursor()
         if "call_number" not in courses:
@@ -75,7 +65,7 @@ class Sections:
         instructor = courses["instructor"] if "instructor" in courses else ""
         day = courses["day"] if "day" in courses else ""
         time_Location = courses["time_Location"] if "time_Location" in courses else ""
-        sql = "INSERT INTO courses.sections (call_number, class_title, instructor, day, time_Location) " \
+        sql = "INSERT INTO courses.student_sections (call_number, class_title, instructor, day, time_Location) " \
               "VALUES (%s, %s, %s, %s, %s)"
         cur.execute(sql, args=(call_number, class_title, instructor, day, time_Location))
         result = cur.fetchone()
@@ -84,9 +74,9 @@ class Sections:
 
     @staticmethod
     def delete_by_key(call_number):
-        conn = Courses._get_connection()
+        conn = Sections._get_connection()
         cur = conn.cursor()
-        sql = "DELETE FROM courses.courses WHERE call_number = %s"
+        sql = "DELETE FROM courses.student_courses WHERE call_number = %s"
         cur.execute(sql, args=call_number)
         result = cur.fetchone()
 

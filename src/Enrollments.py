@@ -1,3 +1,6 @@
+import pymysql
+from os import getenv
+
 class Enrollments:
 
     def __init__(self):
@@ -16,8 +19,8 @@ class Enrollments:
 
     @staticmethod
     def get_by_key(keys):
-        sql = "SELECT * FROM courses.enrollments where call_number=%s and uni=%s"
-        conn = Courses._get_connection()
+        sql = "SELECT * FROM courses.student_enrollments where call_number=%s and uni=%s"
+        conn = Enrollments._get_connection()
         cur = conn.cursor()
         cur.execute(sql, args=keys)
         result = cur.fetchone()
@@ -25,23 +28,13 @@ class Enrollments:
         return result
 
     @staticmethod
-    def get_by_query(query):
-        sql = query
-        conn = Courses._get_connection()
-        cur = conn.cursor()
-        cur.execute(sql, args=key)
-        result = cur.fetchone()
-
-        return result
-
-    @staticmethod
     def update_by_key(keys, courses):
-        conn = Courses._get_connection()
+        conn = Enrollments._get_connection()
         cur = conn.cursor()
         content = []
         if "project_id" in courses:
             content.append("project_id = \"" + courses["project_id"] + "\"")
-        sql = "UPDATE courses.enrollments SET " + ", ".join(content) + " WHERE call_number=%s and uni=%s"
+        sql = "UPDATE courses.student_enrollments SET " + ", ".join(content) + " WHERE call_number=%s AND uni=%s"
         res = cur.execute(sql, args=keys)
         result = cur.fetchone()
 
@@ -49,7 +42,7 @@ class Enrollments:
 
     @staticmethod
     def insert_by_key(courses):
-        conn = Courses._get_connection()
+        conn = Enrollments._get_connection()
         print("connect")
         cur = conn.cursor()
         if "call_number" not in courses or "uni" not in courses:
@@ -57,7 +50,7 @@ class Enrollments:
         call_number = courses["call_number"] if "call_number" in courses else ""
         uni = courses["uni"] if "uni" in courses else ""
         project_id = courses["project_id"] if "project_id" in courses else ""
-        sql = "INSERT INTO courses.enrollments (call_number, uni, project_id) " \
+        sql = "INSERT INTO courses.student_enrollments (call_number, uni, project_id) " \
               "VALUES (%s, %s, %s)"
         cur.execute(sql, args=(call_number, uni, project_id))
         result = cur.fetchone()
@@ -66,9 +59,9 @@ class Enrollments:
 
     @staticmethod
     def delete_by_key(keys):
-        conn = Courses._get_connection()
+        conn = Enrollments._get_connection()
         cur = conn.cursor()
-        sql = "DELETE FROM courses.enrollments WHERE call_number = %s and uni=%s"
+        sql = "DELETE FROM courses.student_enrollments WHERE call_number = %s and uni=%s"
         cur.execute(sql, args=keys)
         result = cur.fetchone()
 
