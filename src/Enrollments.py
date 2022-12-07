@@ -22,7 +22,7 @@ class Enrollments:
         sql = "SELECT * FROM courses.student_enrollments where call_number=%s and uni=%s"
         conn = Enrollments._get_connection()
         cur = conn.cursor()
-        cur.execute(sql, args=keys)
+        cur.execute(sql, args=(keys["call_number"], keys["uni"]))
         result = cur.fetchone()
 
         return result
@@ -33,9 +33,9 @@ class Enrollments:
         cur = conn.cursor()
         content = []
         if "project_id" in courses:
-            content.append("project_id = \"" + courses["project_id"] + "\"")
+            content.append("project_id=\"" + courses["project_id"] + "\"")
         sql = "UPDATE courses.student_enrollments SET " + ", ".join(content) + " WHERE call_number=%s AND uni=%s"
-        res = cur.execute(sql, args=keys)
+        res = cur.execute(sql, args=(keys["call_number"], keys["uni"]))
         result = cur.fetchone()
 
         return result
@@ -52,10 +52,8 @@ class Enrollments:
         project_id = courses["project_id"] if "project_id" in courses else ""
         sql = "INSERT INTO courses.student_enrollments (call_number, uni, project_id) " \
               "VALUES (%s, %s, %s)"
+        print(call_number, uni, project_id)
         cur.execute(sql, args=(call_number, uni, project_id))
-        result = cur.fetchone()
-
-        return result
 
     @staticmethod
     def delete_by_key(keys):

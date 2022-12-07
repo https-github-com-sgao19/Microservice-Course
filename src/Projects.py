@@ -71,25 +71,23 @@ class Projects:
         conn = Projects._get_connection()
         print("connect")
         cur = conn.cursor()
-        if "project_number" not in courses:
-            raise ValueError("project_number")
+        if "project_id" not in courses:
+            raise ValueError("project_id")
         project_id = courses["project_id"] if "project_id" in courses else ""
         project_name = courses["project_name"] if "project_name" in courses else ""
-        group_member = courses["group_member"] if "group_member" in courses else ""
+        group_name = courses["group_name"] if "group_name" in courses else ""
         description = courses["description"] if "description" in courses else ""
-        sql = "INSERT INTO courses.student_projects (project_id, project_name, group_member, description) " \
-              "VALUES (%s, %s, %s, %s)"
-        cur.execute(sql, args=(project_id, project_name, group_member, description))
-        result = cur.fetchone()
-
-        return result
+        call_number = courses["call_number"] if "call_number" in courses else ""
+        sql = "INSERT INTO courses.student_projects (project_id, project_name, group_name, description,call_number) " \
+              "VALUES (%s, %s, %s, %s, %s)"
+        cur.execute(sql, args=(project_id, project_name, group_name, description, call_number))
 
     @staticmethod
-    def delete_by_key(project_number):
+    def delete_by_key(project_id):
         conn = Projects._get_connection()
         cur = conn.cursor()
-        sql = "DELETE FROM courses.student_projects WHERE project_number = %s"
-        cur.execute(sql, args=project_number)
+        sql = "DELETE FROM courses.student_projects WHERE project_id = %s"
+        cur.execute(sql, args=project_id)
         result = cur.fetchone()
 
         return result

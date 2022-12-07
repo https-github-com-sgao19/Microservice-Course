@@ -17,27 +17,25 @@ def put_section(call_number):
     body = request.form
     Sections.update_by_key(call_number, body)
     return Sections.get_by_key(call_number)
+
+@app.post("/sections")
+def post_section():
+    body = request.form.to_dict()
+    try:
+        Sections.insert_by_key(body)
+    except:
+        return Response("Insert Failure", status=404, content_type="text/plain")
+    return Sections.get_by_key(body["call_number"])
+
 #
-#
-# @app.post("/sections")
-# def post_section():
-#     body = request.form
-#     print(body)
-#     try:
-#         Sections.insert_by_key(body)
-#     except:
-#         return Response("Insert Failure", status=404, content_type="text/plain")
-#     return get_section_by_key(body["call_number"])
-#
-#
-# @app.delete("/sections/<call_number>")
-# def delete_section(call_number):
-#     try:
-#         Sections.delete_by_key(call_number)
-#         response = make_response("Delete Success!", 200)
-#     except:
-#         response = make_response("Delete Fail!", 400)
-#     return response
+@app.delete("/sections/<call_number>")
+def delete_section(call_number):
+    try:
+        Sections.delete_by_key(call_number)
+        response = make_response("Delete Success!", 200)
+    except:
+        response = make_response("Delete Fail!", 400)
+    return response
 
 
 @app.get("/sections/<call_number>")
@@ -59,26 +57,17 @@ def put_project(project_id):
     return Projects.get_by_key(project_id)
 
 
-# @app.post("/projects")
-# def post_section():
-#     body = request.form
-#     print(body)
-#     try:
-#         Projects.insert_by_key(body)
-#     except:
-#         return Response("Insert Failure", status=404, content_type="text/plain")
-#     return get_section_by_key(body["project_id"])
+@app.post("/projects")
+def post_project():
+    body = request.form.to_dict()
+    try:
+        Projects.insert_by_key(body)
+    except:
+        return Response("Insert Failure", status=404, content_type="text/plain")
+    return Projects.get_by_key(body["project_id"])
+
 #
-#
-# @app.delete("/projects/<project_id>")
-# def delete_section(project_id):
-#     try:
-#         Projects.delete_by_key(project_id)
-#         response = make_response("Delete Success!", 200)
-#     except:
-#         response = make_response("Delete Fail!", 400)
-#     return response
-#
+
 #
 @app.route("/projects/<project_id>", methods=["GET"])
 def get_project(project_id):
@@ -103,35 +92,46 @@ def get_project_by_params():
 
     return rsp
 
+
+@app.delete("/projects/<keys>")
+def delete_projects(keys):
+    try:
+        Projects.delete_by_key(keys)
+        response = make_response("Delete Success!", 200)
+    except:
+        response = make_response("Delete Fail!", 400)
+    return response
+
+
 @app.put("/enrollments")
 def put_enrollment():
     params = request.args
-    result = Enrollments.get_by_key(params)
-    Enrollments.update_by_key(params)
+    body = request.form
+    Enrollments.update_by_key(params, body)
     return Enrollments.get_by_key(params)
-    #return get_enrollments(call_number)
+
 #
 #
-# @app.post("/enrollments")
-# def post_enrollment():
-#     body = request.form
-#     print(body)
-#     try:
-#         Enrollments.insert_by_key(body)
-#     except:
-#         return Response("Insert Failure", status=404, content_type="text/plain")
-#     return get_enrollment_by_key(body["keys"])
+@app.post("/enrollments")
+def post_enrollment():
+    body = request.form.to_dict()
+    try:
+        Enrollments.insert_by_key(body)
+    except:
+        return Response("Insert Failure", status=404, content_type="text/plain")
+    return Enrollments.get_by_key(body)
+
 #
-#
-# @app.delete("/enrollments/<keys>")
-# def delete_enrollment(keys):
-#     try:
-#         Enrollments.delete_by_key(keys)
-#         response = make_response("Delete Success!", 200)
-#     except:
-#         response = make_response("Delete Fail!", 400)
-#     return response
-#
+@app.delete("/enrollments/<keys>")
+def delete_enrollment(keys):
+    keys = keys.split(",")
+    try:
+        Enrollments.delete_by_key(keys)
+        response = make_response("Delete Success!", 200)
+    except:
+        response = make_response("Delete Fail!", 400)
+    return response
+
 #
 @app.route("/enrollments/<keys>", methods=["GET"])
 def get_enrollments(keys):
@@ -143,6 +143,7 @@ def get_enrollments(keys):
         rsp = Response("NOT FOUND", status=404, content_type="text/plain")
 
     return rsp
+
 
 
 if __name__ == "__main__":

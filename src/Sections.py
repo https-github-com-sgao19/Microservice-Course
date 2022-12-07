@@ -65,18 +65,16 @@ class Sections:
         instructor = courses["instructor"] if "instructor" in courses else ""
         day = courses["day"] if "day" in courses else ""
         time_Location = courses["time_Location"] if "time_Location" in courses else ""
-        sql = "INSERT INTO courses.student_sections (call_number, class_title, instructor, day, time_Location) " \
+        sql = "INSERT INTO courses.student_sections(call_number, class_title, instructor, day, time_Location) " \
               "VALUES (%s, %s, %s, %s, %s)"
         cur.execute(sql, args=(call_number, class_title, instructor, day, time_Location))
-        result = cur.fetchone()
 
-        return result
 
     @staticmethod
     def delete_by_key(call_number):
         conn = Sections._get_connection()
         cur = conn.cursor()
-        sql = "DELETE FROM courses.student_courses WHERE call_number = %s"
+        sql = "DELETE FROM courses.student_sections WHERE call_number=%s"
         cur.execute(sql, args=call_number)
         result = cur.fetchone()
 
