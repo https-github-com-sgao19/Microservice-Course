@@ -14,9 +14,9 @@ class Sections:
     @staticmethod
     def _get_connection():
         conn = pymysql.connect(
-            user=getenv("USER"),
-            password=getenv("PWD"),
-            host=getenv("HOST"),
+            user="admin",
+            password="12345678",
+            host="course.ceqqavijgmdi.us-east-1.rds.amazonaws.com",
             cursorclass=pymysql.cursors.DictCursor,
             autocommit=True
         )
