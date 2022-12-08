@@ -14,13 +14,13 @@ CORS(app)
 
 @app.put("/sections/<call_number>")
 def put_section(call_number):
-    body = request.form
+    body = request.json
     Sections.update_by_key(call_number, body)
     return Sections.get_by_key(call_number)
 
 @app.post("/sections")
 def post_section():
-    body = request.form.to_dict()
+    body = request.json
     try:
         Sections.insert_by_key(body)
     except:
@@ -52,14 +52,14 @@ def get_sections(call_number):
 
 @app.put("/projects/<project_id>")
 def put_project(project_id):
-    body = request.form
+    body = request.json
     Projects.update_by_key(project_id, body)
     return Projects.get_by_key(project_id)
 
 
 @app.post("/projects")
 def post_project():
-    body = request.form.to_dict()
+    body = request.json
     try:
         Projects.insert_by_key(body)
     except:
@@ -106,22 +106,22 @@ def delete_projects(keys):
 @app.put("/enrollments")
 def put_enrollment():
     params = request.args
-    body = request.form
+    body = request.json
     Enrollments.update_by_key(params, body)
     return Enrollments.get_by_key(params)
 
-#
-#
+
+
 @app.post("/enrollments")
 def post_enrollment():
-    body = request.form.to_dict()
+    body = request.json
     try:
         Enrollments.insert_by_key(body)
     except:
         return Response("Insert Failure", status=404, content_type="text/plain")
     return Enrollments.get_by_key(body)
 
-#
+
 @app.delete("/enrollments/<keys>")
 def delete_enrollment(keys):
     keys = keys.split(",")
@@ -132,7 +132,7 @@ def delete_enrollment(keys):
         response = make_response("Delete Fail!", 400)
     return response
 
-#
+
 @app.route("/enrollments/<keys>", methods=["GET"])
 def get_enrollments(keys):
     result = Enrollments.get_by_key(keys)
