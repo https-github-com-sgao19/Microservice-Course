@@ -145,7 +145,7 @@ def get_enrollments(keys):
     return rsp
 
 ####################分页
-@application.get("/Sections")
+@application.get("/sections")
 def get_sections_by_template():
     params = request.args
     sections_per_page = int(params["limit"]) if "limit" in params else 10
