@@ -7,18 +7,18 @@ from Projects import Projects
 from Enrollments import Enrollments
 
 # Create the Flask application object.
-app = Flask(__name__)
+application = Flask(__name__)
 
-CORS(app)
+CORS(application)
 
 
-@app.put("/sections/<call_number>")
+@application.put("/sections/<call_number>")
 def put_section(call_number):
     body = request.json
     Sections.update_by_key(call_number, body)
     return Sections.get_by_key(call_number)
 
-@app.post("/sections")
+@application.post("/sections")
 def post_section():
     body = request.json
     try:
@@ -28,7 +28,7 @@ def post_section():
     return Sections.get_by_key(body["call_number"])
 
 #
-@app.delete("/sections/<call_number>")
+@application.delete("/sections/<call_number>")
 def delete_section(call_number):
     try:
         Sections.delete_by_key(call_number)
@@ -38,7 +38,7 @@ def delete_section(call_number):
     return response
 
 
-@app.get("/sections/<call_number>")
+@application.get("/sections/<call_number>")
 def get_sections(call_number):
     result = Sections.get_by_key(call_number)
 
@@ -50,14 +50,14 @@ def get_sections(call_number):
     return rsp
 
 
-@app.put("/projects/<project_id>")
+@application.put("/projects/<project_id>")
 def put_project(project_id):
     body = request.json
     Projects.update_by_key(project_id, body)
     return Projects.get_by_key(project_id)
 
 
-@app.post("/projects")
+@application.post("/projects")
 def post_project():
     body = request.json
     try:
@@ -69,7 +69,7 @@ def post_project():
 #
 
 #
-@app.route("/projects/<project_id>", methods=["GET"])
+@application.route("/projects/<project_id>", methods=["GET"])
 def get_project(project_id):
     result = Projects.get_by_key(project_id)
 
@@ -80,7 +80,7 @@ def get_project(project_id):
 
     return rsp
 
-@app.get("/projects")
+@application.get("/projects")
 def get_project_by_params():
     params = request.args
     result = Projects.get_by_params(params)
@@ -93,7 +93,7 @@ def get_project_by_params():
     return rsp
 
 
-@app.delete("/projects/<keys>")
+@application.delete("/projects/<keys>")
 def delete_projects(keys):
     try:
         Projects.delete_by_key(keys)
@@ -103,7 +103,7 @@ def delete_projects(keys):
     return response
 
 
-@app.put("/enrollments")
+@application.put("/enrollments")
 def put_enrollment():
     params = request.args
     body = request.json
@@ -112,7 +112,7 @@ def put_enrollment():
 
 
 
-@app.post("/enrollments")
+@application.post("/enrollments")
 def post_enrollment():
     body = request.json
     try:
@@ -122,7 +122,7 @@ def post_enrollment():
     return Enrollments.get_by_key(body)
 
 
-@app.delete("/enrollments/<keys>")
+@application.delete("/enrollments/<keys>")
 def delete_enrollment(keys):
     keys = keys.split(",")
     try:
@@ -133,7 +133,7 @@ def delete_enrollment(keys):
     return response
 
 
-@app.route("/enrollments/<keys>", methods=["GET"])
+@application.route("/enrollments/<keys>", methods=["GET"])
 def get_enrollments(keys):
     result = Enrollments.get_by_key(keys)
 
@@ -162,7 +162,7 @@ def get_sections_by_template():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5011)
+    application.run(host="0.0.0.0", port=5011)
 
 ##############################################################################################
 
