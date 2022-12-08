@@ -144,6 +144,21 @@ def get_enrollments(keys):
 
     return rsp
 
+####################分页
+@application.get("/Sections")
+def get_sections_by_template():
+    params = request.args
+    sections_per_page = int(params["limit"]) if "limit" in params else 10
+    offset = sections_per_page * (int(params["page"]) - 1) if "page" in params else 0
+
+    result = Sections.get_by_template(10, offset)
+    if result:
+        rsp = Response(json.dumps(result), status=200, content_type="application.json")
+    else:
+        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+
+    return rsp
+
 
 
 if __name__ == "__main__":

@@ -79,3 +79,10 @@ class Sections:
         result = cur.fetchone()
 
         return result
+######
+    @staticmethod
+    def get_by_template(self, limit=10, offset=0):
+        sql = "SELECT * FROM courses.student_sections LIMIT %s OFFSET %s"
+        cur = self.conn.cursor()
+        cur.execute(sql, args=(limit, offset))
+        return cur.fetchall()
