@@ -67,6 +67,16 @@ class Enrollments:
     @staticmethod
     def get_by_template(self, limit=10, offset=0):
         sql = "SELECT * FROM courses.student_enrollments LIMIT %s OFFSET %s"
-        cur = self.conn.cursor()
+        cur = conn.cursor()
         cur.execute(sql, args=(limit, offset))
         return cur.fetchall()
+
+    @staticmethod
+    def join_s(uni):
+        conn = Enrollments._get_connection()
+        print("connect")
+        cur = conn.cursor()
+        sql = "SELECT * FROM courses.student_enrollments se JOIN courses.student_sections ss on se.call_number = ss.call_number WHERE uni = %s"
+        res = cur.execute(sql, uni)
+        result = cur.fetchall()
+        return result
