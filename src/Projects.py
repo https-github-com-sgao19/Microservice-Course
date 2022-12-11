@@ -46,6 +46,18 @@ class Projects:
         result = cur.fetchall()
         return result
 
+    @staticmethod
+    def get_by_course(call_number):
+        sql = "SELECT * FROM courses.student_projects WHERE courses.student_projects.call_number = %s"
+        conn = Projects._get_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(sql, (call_number,))
+                result = cur.fetchall()
+                return result
+
+
+
 
     @staticmethod
     def update_by_key(project_number, courses):
