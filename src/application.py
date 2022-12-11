@@ -160,6 +160,15 @@ def get_sections_by_template():
     return rsp
 
 
+@application.get('/<uni>')
+def get_uni(uni):
+    result = Enrollments.join_s(uni)
+
+    if result:
+        rsp = Response(json.dumps(result), status=200, content_type="application.json")
+    else:
+        rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+    return rsp
 
 if __name__ == "__main__":
     application.run(host="0.0.0.0", port=5011)
