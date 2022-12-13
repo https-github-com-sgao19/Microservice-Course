@@ -29,23 +29,33 @@ class Projects:
         return result
 
     @staticmethod
-    def get_by_params(params):
-        conn = Projects._get_connection()
-        cur = conn.cursor()
-        where_args = []
-        if len(params) == 0:
+    def get_by_param(param):
+        where_clause, where_params = [], []
+        if "project_id" in param:
+            where_clause.append("project_id=%s")
+            where_params.append(param["project_id"])
+        if "call_number" in param:
+            where_clause.append("call_number=%s")
+            where_params.append(param["call_number"])
+        if "project_name" in param:
+            where_clause.append("project_name=%s")
+            where_params.append(param["project_name"])
+        if "group_name" in param:
+            where_clause.append("group_name=%s")
+            where_params.append(param["group_name"])
+        if "description" in param:
+            where_clause.append("description=%s")
+            where_params.append(param["description"])
+        if not where_clause:
             sql = "SELECT * FROM courses.student_projects"
         else:
-            where_condition = []
-            for k, v in params.items():
-                where_condition.append(k + "=%s")
-                where_args.append(v)
-            sql = "SELECT * FROM courses.student_projects WHERE " + " AND ".join(where_condition)
-
-        cur.execute(sql, args=where_args)
-        result = cur.fetchall()
-        return result
-
+            sql = "SELECT * FROM courses.student_projects WHERE " + ' AND '.join(where_clause)
+        conn = Projects._get_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(sql, where_params)
+                result = cur.fetchall()
+                return result
 
     @staticmethod
     def update_by_key(project_number, courses):
@@ -61,9 +71,8 @@ class Projects:
         if "description" in courses:
             content.append("description = \"" + courses["description"] + "\"")
         sql = "UPDATE courses.student_projects SET " + ", ".join(content) + " WHERE project_id = %s"
-        res = cur.execute(sql, args=project_number)
+        cur.execute(sql, args=project_number)
         result = cur.fetchone()
-
         return result
 
     @staticmethod
@@ -91,6 +100,7 @@ class Projects:
         result = cur.fetchone()
 
         return result
+
     @staticmethod
     def get_by_template(self, limit=10, offset=0):
         sql = "SELECT * FROM courses.student_projects LIMIT %s OFFSET %s"

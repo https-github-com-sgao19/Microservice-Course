@@ -56,7 +56,6 @@ class Sections:
     @staticmethod
     def insert_by_key(courses):
         conn = Sections._get_connection()
-        print("connect")
         cur = conn.cursor()
         if "call_number" not in courses:
             raise ValueError("call_number")
@@ -68,7 +67,6 @@ class Sections:
         sql = "INSERT INTO courses.student_sections(call_number, class_title, instructor, day, time_Location) " \
               "VALUES (%s, %s, %s, %s, %s)"
         cur.execute(sql, args=(call_number, class_title, instructor, day, time_Location))
-
 
     @staticmethod
     def delete_by_key(call_number):
