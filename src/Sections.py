@@ -56,7 +56,6 @@ class Sections:
     @staticmethod
     def insert_by_key(courses):
         conn = Sections._get_connection()
-        print("connect")
         cur = conn.cursor()
         if "call_number" not in courses:
             raise ValueError("call_number")
@@ -69,7 +68,6 @@ class Sections:
               "VALUES (%s, %s, %s, %s, %s)"
         cur.execute(sql, args=(call_number, class_title, instructor, day, time_Location))
 
-
     @staticmethod
     def delete_by_key(call_number):
         conn = Sections._get_connection()
@@ -79,10 +77,11 @@ class Sections:
         result = cur.fetchone()
 
         return result
-######
+
     @staticmethod
-    def get_by_template(self, limit=10, offset=0):
+    def get_by_template(limit=10, offset=0):
         sql = "SELECT * FROM courses.student_sections LIMIT %s OFFSET %s"
+        conn = Sections._get_connection()
         cur = conn.cursor()
         cur.execute(sql, args=(limit, offset))
         return cur.fetchall()
