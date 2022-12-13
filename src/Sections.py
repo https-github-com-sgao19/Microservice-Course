@@ -69,7 +69,6 @@ class Sections:
               "VALUES (%s, %s, %s, %s, %s)"
         cur.execute(sql, args=(call_number, class_title, instructor, day, time_Location))
 
-
     @staticmethod
     def delete_by_key(call_number):
         conn = Sections._get_connection()
